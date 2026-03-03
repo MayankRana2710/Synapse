@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  reactStrictMode: false,
+  serverExternalPackages: ["utf-8-validate", "bufferutil"],
   images: {
     remotePatterns: [
       {

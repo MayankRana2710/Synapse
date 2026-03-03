@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 
 import { ThemeProvider } from "@/components/providers/theme-providers";
 import ModalProvider from "@/components/providers/modal-provider";
+import { SocketProvider } from "@/components/providers/socket-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 const openSans = Open_Sans({
   variable: "--font-sans",
@@ -29,15 +31,19 @@ export default function RootLayout({
         <body className={cn(
           openSans.variable,
           "bg-white dark:bg-[#313338]"
-          )}>
+        )}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem={false}
             storageKey="discord-theme"
           >
-            <ModalProvider/>
-            {children}
+            <SocketProvider>
+              <ModalProvider />
+              <QueryProvider>
+              {children}
+              </QueryProvider>
+            </SocketProvider>
           </ThemeProvider>
         </body>
       </html>
