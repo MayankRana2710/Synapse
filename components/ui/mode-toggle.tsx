@@ -50,3 +50,51 @@ export function ModeToggle() {
     </DropdownMenu>
   )
 }
+
+
+
+// "use client";
+
+// import { Menu } from "lucide-react";
+
+// import {
+//     Sheet,
+//     SheetContent,
+//     SheetTrigger,
+// } from "@/components/ui/sheet";
+// import { Button } from "@/components/ui/button";
+// import { NavigationSidebar } from "@/components/navigation/navigation-sidebar";
+// import { ServerSidebar } from "@/components/server/server-sidebar";
+
+// export const MobileToggle = ({
+//     serverId
+// }: {
+//     serverId: string;
+// }) => {
+//     return (
+//         <Sheet>
+//             <SheetTrigger asChild>
+//                 <Button 
+//                     variant="ghost" 
+//                     size="icon" 
+//                     className="md:hidden p-2 rounded-[10px] bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.08] transition-all mr-2"
+//                 >
+//                     <Menu className="text-white/[0.5]" />
+//                 </Button>
+//             </SheetTrigger>
+//             <SheetContent 
+//                 side="left" 
+//                 className="p-0 flex gap-0 bg-[#050505] border-r border-white/[0.05]"
+//             >
+//                 {/* Fixed width for the primary navigation icon bar */}
+//                 <div className="w-[72px]">
+//                     <NavigationSidebar />
+//                 </div>
+//                 {/* The rest of the sheet is the server-specific sidebar */}
+//                 <div className="flex-1 bg-[#050505]/50 backdrop-blur-md">
+//                     <ServerSidebar serverId={serverId} />
+//                 </div>
+//             </SheetContent>
+//         </Sheet>
+//     )
+// }

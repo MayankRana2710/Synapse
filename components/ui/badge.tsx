@@ -4,17 +4,25 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  // Base: Frosted pill shape with tight tracking and medium weight
+  "inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium tracking-[0.3px] uppercase transition-colors focus:outline-none backdrop-blur-md",
   {
     variants: {
       variant: {
+        // Standard glass pill
         default:
-          "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
+          "border-white/[0.08] bg-white/[0.04] text-white/[0.85] shadow-none",
+        // Subtler glass
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "border-white/[0.05] bg-white/[0.02] text-white/[0.45] hover:bg-white/[0.05]",
+        // Red glass for alerts
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
-        outline: "text-foreground",
+          "border-rose-500/20 bg-rose-500/10 text-rose-400 shadow-none",
+        // Pure ghost badge
+        outline: "text-white/[0.3] border-white/[0.07] bg-transparent",
+        // Success glass (for Live indicators)
+        success:
+          "border-emerald-500/20 bg-emerald-500/10 text-emerald-400 shadow-none",
       },
     },
     defaultVariants: {

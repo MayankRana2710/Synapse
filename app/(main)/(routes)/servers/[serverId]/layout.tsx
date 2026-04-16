@@ -14,8 +14,8 @@ const ServerIdLayout = async ({
 }) => {
     const profile = await currentProfile();
 
-    if(!profile){
-        return <RedirectToSignIn/>
+    if (!profile) {
+        return <RedirectToSignIn />
     }
 
     const { serverId } = await params;
@@ -24,25 +24,23 @@ const ServerIdLayout = async ({
         where: {
             id: serverId,
             members: {
-                some: {
-                    profileId: profile.id
-                }
+                some: { profileId: profile.id }
             }
         }
     })
 
-    if(!server){
-        return redirect("/");
-    }
+    if (!server) return redirect("/");
+    
     return (
-        <div className='h-full'>
-            <div className='hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0 '>
-                <ServerSidebar serverId={serverId}/>
+        <div className="h-full w-full relative flex">
+            {/* The ServerSidebar width (w-60 -> 240px) remains to match standard layout */}
+            <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0 bg-transparent">
+                <ServerSidebar serverId={serverId} />
             </div>
-            <main className='h-full md:pl-60'>
+            {/* Padded main content area */}
+            <main className="h-full w-full md:pl-60 flex-1 relative z-10">
                 {children}
             </main>
-            
         </div>
     );
 }

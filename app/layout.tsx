@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Open_Sans } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
 
@@ -10,9 +10,14 @@ import ModalProvider from "@/components/providers/modal-provider";
 import { SocketProvider } from "@/components/providers/socket-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
 
-const openSans = Open_Sans({
+// IMPORT YOUR NEW CURSOR HERE
+import { CustomCursor } from "@/components/global/custom-cursor";
+
+// 1. Load the Outfit font with the specific weights from your spec
+const outfit = Outfit({
   variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -28,10 +33,15 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
+        {/* 2. Pure black body, hide scrollbars, hide default cursor, setup font */}
         <body className={cn(
-          openSans.variable,
-          "bg-white dark:bg-[#313338]"
+          outfit.variable,
+          "bg-black font-sans text-white/[0.85] overflow-hidden cursor-none antialiased selection:bg-white/[0.1] selection:text-white"
         )}>
+          
+          {/* DROP THE CURSOR HERE: It will persist across all routes and sit at z-[9999] */}
+          <CustomCursor />
+
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -41,7 +51,12 @@ export default function RootLayout({
             <SocketProvider>
               <ModalProvider />
               <QueryProvider>
-              {children}
+                
+                {/* 3. The main page wrapper with your specific off-black tint */}
+                <main className="relative flex h-screen w-full flex-col bg-[#050505]">
+                  {children}
+                </main>
+                
               </QueryProvider>
             </SocketProvider>
           </ThemeProvider>

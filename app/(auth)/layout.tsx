@@ -1,8 +1,9 @@
 import React from 'react'
 
-const AuthLayout = ({children}:{children: React.ReactNode}) => {
+const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className='bg-indigo-500 min-h-screen flex items-center justify-center'>
+    // Removed the indigo background, added full width, and kept it perfectly centered
+    <div className="relative flex h-full min-h-screen w-full items-center justify-center">
       {children}
     </div>
   )

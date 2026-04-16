@@ -36,48 +36,40 @@ import { ChannelType } from "@prisma/client";
 import { useEffect } from "react";
 
 const formSchema = z.object({
-    name: z.string().min(1, {
-        message: "Channel name is required"
-    }).refine(
-        name => name !== "general",
-        {
-            message: "Channel name cannot be 'general'"
-        }
+    name: z.string().min(1, { message: "Channel name is required" }).refine(
+        name => name !== "general", { message: "Channel name cannot be 'general'" }
     ),
     type: z.nativeEnum(ChannelType)
 })
 
 export const EditChannelModal = () => {
-    const { isOpen, onClose, type,data } = useModal();
-
+    const { isOpen, onClose, type, data } = useModal();
     const router = useRouter();
-    
-    const {channel,server}=data;
+    const { channel, server } = data;
 
     const isModalOpen = isOpen && type === "editChannel";
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            type: channel?.type||ChannelType.TEXT,
+            type: channel?.type || ChannelType.TEXT,
         }
     });
 
-    useEffect(()=>{
-        if(channel){
-            form.setValue("name",channel.name);
-            form.setValue("type",channel.type);
+    useEffect(() => {
+        if (channel) {
+            form.setValue("name", channel.name);
+            form.setValue("type", channel.type);
         }
-    },[channel,form])
+    }, [channel, form])
 
     const isLoading = form.formState.isSubmitting;
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const url=qs.stringifyUrl({
-                url:`/api/channels/${channel?.id}`,
-                query:{
-                    serverId:server?.id
-                }
+            const url = qs.stringifyUrl({
+                url: `/api/channels/${channel?.id}`,
+                query: { serverId: server?.id }
             });
             await axios.patch(url, values);
 
@@ -96,33 +88,32 @@ export const EditChannelModal = () => {
 
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
-            <DialogContent className="bg-white text-black p-0 overflow-hidden">
-                <DialogHeader className="pt-8 px-6">
-                    <DialogTitle className="text-2xl text-center">
+            <DialogContent className="bg-[#050505]/80 backdrop-blur-2xl border border-white/[0.07] rounded-[22px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.035),0_50px_100px_rgba(0,0,0,0.95),0_20px_40px_rgba(0,0,0,0.6)] text-white p-0 overflow-hidden sm:max-w-[420px]">
+                <DialogHeader className="pt-10 px-8 pb-4">
+                    <DialogTitle className="text-[24px] font-semibold tracking-[-0.8px] leading-[1.18] text-center bg-gradient-to-br from-white/[0.95] from-30% to-white/[0.42] bg-clip-text text-transparent">
                         Edit Channel
                     </DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-8">
-                        <div className="space-y-8 px-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <div className="space-y-6 px-8">
                             <FormField
                                 control={form.control}
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
+                                        <FormLabel className="text-[12.5px] font-medium text-white/[0.3] tracking-[0.4px] uppercase">
                                             Channel Name
                                         </FormLabel>
                                         <FormControl>
                                             <Input
                                                 disabled={isLoading}
-                                                className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                                                className="py-[11.5px] px-[14px] bg-white/[0.04] border border-white/[0.075] rounded-[10px] text-[14px] text-white/[0.85] placeholder:text-white/[0.16] placeholder:font-light focus-visible:bg-white/[0.06] focus-visible:border-white/[0.2] focus-visible:ring-[3px] focus-visible:ring-white/[0.035] transition-all duration-200 outline-none"
                                                 placeholder="Enter channel name"
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage className="text-[12.5px] text-rose-400/90" />
                                     </FormItem>
                                 )}
                             />
@@ -131,7 +122,9 @@ export const EditChannelModal = () => {
                                 name="type"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Channel Type</FormLabel>
+                                        <FormLabel className="text-[12.5px] font-medium text-white/[0.3] tracking-[0.4px] uppercase">
+                                            Channel Type
+                                        </FormLabel>
                                         <Select
                                             disabled={isLoading}
                                             onValueChange={field.onChange}
@@ -139,31 +132,33 @@ export const EditChannelModal = () => {
                                         >
                                             <FormControl>
                                                 <SelectTrigger
-                                                    className="bg-zinc-300/50 border-0 focus:ring-0 text-black 
-                                                    ring-offest-0 focus:ring-offset-0 capitalize outline-none"
+                                                    className="py-[11.5px] px-[14px] bg-white/[0.04] border border-white/[0.075] rounded-[10px] text-[14px] text-white/[0.85] focus:bg-white/[0.06] focus:border-white/[0.2] focus:ring-[3px] focus:ring-white/[0.035] transition-all duration-200 outline-none capitalize"
                                                 >
                                                     <SelectValue placeholder="Select a channel type" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent>
+                                            <SelectContent className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/[0.07] rounded-[10px] text-white/[0.85]">
                                                 {Object.values(ChannelType).map((type) => (
                                                     <SelectItem
                                                         key={type}
                                                         value={type}
-                                                        className="capitalize"
+                                                        className="capitalize hover:bg-white/[0.04] focus:bg-white/[0.04] text-[14px] cursor-pointer rounded-md transition-colors"
                                                     >
                                                         {type.toLowerCase()}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        <FormMessage />
+                                        <FormMessage className="text-[12.5px] text-rose-400/90" />
                                     </FormItem>
                                 )}
                             />
                         </div>
-                        <DialogFooter className="bg-gray-100 px-6 py-4">
-                            <Button variant="primary" disabled={isLoading}>
+                        <DialogFooter className="px-8 pb-8 pt-4">
+                            <Button 
+                                disabled={isLoading}
+                                className="w-full p-[12.5px] rounded-[10px] text-[14px] font-medium tracking-[0.05px] bg-white/[0.86] text-black hover:bg-white hover:shadow-[0_6px_36px_rgba(255,255,255,0.22),0_0_80px_rgba(255,255,255,0.06)] hover:-translate-y-[1px] active:scale-[0.99] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] disabled:bg-white/[0.07] disabled:text-white/[0.18] disabled:hover:translate-y-0 disabled:active:scale-100 disabled:shadow-none"
+                            >
                                 Save
                             </Button>
                         </DialogFooter>

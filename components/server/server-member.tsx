@@ -6,43 +6,42 @@ import { ShieldCheck } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { UserAvatar } from "../user-avatar";
 
-interface ServerMemberProps{
-    member:Member & {profile: Profile};
-    server:Server
+interface ServerMemberProps {
+    member: Member & { profile: Profile };
+    server: Server
 }
 
-const roleIconMap={
-    [MemberRole.GUEST]:null,
-    [MemberRole.MODERATOR]:<ShieldCheck className="h-4 w-4 ml-2 text-indigo-500"/>,
-    [MemberRole.ADMIN]:<ShieldCheck className="h-4 w-4 ml-2 text-rose-500"/>,
+const roleIconMap = {
+    [MemberRole.GUEST]: null,
+    [MemberRole.MODERATOR]: <ShieldCheck className="h-4 w-4 ml-2 text-indigo-400 opacity-80"/>,
+    [MemberRole.ADMIN]: <ShieldCheck className="h-4 w-4 ml-2 text-rose-400 opacity-80"/>,
 }
 
-export const ServerMember = ({
-    member,
-    server
-}:ServerMemberProps) =>{
-    const params=useParams();
-    const router=useRouter();
+export const ServerMember = ({ member, server }: ServerMemberProps) => {
+    const params = useParams();
+    const router = useRouter();
 
-    const icon=roleIconMap[member.role];
+    const icon = roleIconMap[member.role];
 
-    const onClick=()=>{
+    const onClick = () => {
         router.push(`/servers/${params?.serverId}/conversations/${member.id}`)
     }
-    return(
+    
+    return (
         <button
             onClick={onClick}
             className={cn(
-                "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition mb-1",
-                params?.memberId === member.id && "bg-zinc-700/20 dark:bg-zinc-700"
+                "group px-2 py-2 rounded-[8px] flex items-center gap-x-2 w-full hover:bg-white/[0.02] transition-colors mb-[2px]",
+                params?.memberId === member.id && "bg-white/[0.06]"
             )}
         >
             <UserAvatar 
                 src={member.profile.imageUrl}
-                className="h-8 w-8 md:h-8 md:w-8"
+                className="h-7 w-7 md:h-7 md:w-7 ring-1 ring-white/[0.07]"
             />
-            <p className={cn("font-semibold text-sm text-zinc-500 group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300 transition",
-                params?.memberId === member.id && "text-primary dark:text-zinc-200 dark:group-hover:text-white"
+            <p className={cn(
+                "font-medium text-[14px] text-white/[0.65] group-hover:text-white/[0.85] transition-colors",
+                params?.memberId === member.id && "text-white/[0.95]"
             )}>
                 {member.profile.name}
             </p>

@@ -15,7 +15,6 @@ interface ChannelIdPageProps {
 }
 
 const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
-
     const profile = await currentProfile();
 
     if (!profile) {
@@ -24,10 +23,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
     const { serverId, channelId } = await params;
 
     const channel = await db.channel.findUnique({
-        where: {
-            id: channelId,
-
-        }
+        where: { id: channelId }
     });
 
     const member = await db.member.findFirst({
@@ -42,7 +38,8 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
     }
 
     return (
-        <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+        // Removed solid backgrounds, relying on global #050505
+        <div className="flex flex-col h-full bg-transparent relative z-10 w-full">
             <ChatHeader
                 serverId={channel.serverId}
                 name={channel.name}
@@ -75,14 +72,14 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
                     />
                 </>
             )}
-            {channel.type===ChannelType.AUDIO &&(
+            {channel.type === ChannelType.AUDIO &&(
                 <MediaRoom
                     chatId={channel.id}
                     video={false}
                     audio={true}
                 />
             )}
-            {channel.type===ChannelType.VIDEO &&(
+            {channel.type === ChannelType.VIDEO &&(
                 <MediaRoom
                     chatId={channel.id}
                     video={true}
@@ -91,8 +88,6 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
             )}
         </div>
     )
-
 }
-
 
 export default ChannelIdPage;

@@ -48,38 +48,37 @@ const formSchema = z.object({
 })
 
 export const CreateChannelModal = () => {
-    const { isOpen, onClose, type,data } = useModal();
-
+    const { isOpen, onClose, type, data } = useModal();
     const router = useRouter();
-
-    const params=useParams();
+    const params = useParams();
     
-    const {channelType}=data;
-
+    const { channelType } = data;
     const isModalOpen = isOpen && type === "createChannel";
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            type: channelType||ChannelType.TEXT,
+            type: channelType || ChannelType.TEXT,
         }
     });
 
-    useEffect(()=>{
-        if(channelType){
-            form.setValue("type",channelType);
-        }else{
-            form.setValue("type",ChannelType.TEXT);
+    useEffect(() => {
+        if (channelType) {
+            form.setValue("type", channelType);
+        } else {
+            form.setValue("type", ChannelType.TEXT);
         }
-    },[channelType,form])
+    }, [channelType, form])
 
     const isLoading = form.formState.isSubmitting;
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const url=qs.stringifyUrl({
-                url:"/api/channels",
-                query:{
-                    serverId:params?.serverId
+            const url = qs.stringifyUrl({
+                url: "/api/channels",
+                query: {
+                    serverId: params?.serverId
                 }
             });
             await axios.post(url, values);
@@ -88,7 +87,7 @@ export const CreateChannelModal = () => {
             router.refresh();
             onClose();
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -99,42 +98,46 @@ export const CreateChannelModal = () => {
 
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
-            <DialogContent className="bg-white text-black p-0 overflow-hidden">
-                <DialogHeader className="pt-8 px-6">
-                    <DialogTitle className="text-2xl text-center">
+            <DialogContent className="bg-[#050505]/80 backdrop-blur-2xl border border-white/[0.07] rounded-[22px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.035),0_50px_100px_rgba(0,0,0,0.95),0_20px_40px_rgba(0,0,0,0.6)] text-white p-0 overflow-hidden sm:max-w-[420px]">
+                
+                <DialogHeader className="pt-10 px-8 pb-4">
+                    <DialogTitle className="text-[24px] font-semibold tracking-[-0.8px] leading-tight text-center bg-gradient-to-br from-white/[0.95] from-30% to-white/[0.42] bg-clip-text text-transparent">
                         Create Channel
                     </DialogTitle>
                 </DialogHeader>
+
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-8">
-                        <div className="space-y-8 px-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <div className="space-y-6 px-8 mt-2">
                             <FormField
                                 control={form.control}
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
+                                        <FormLabel className="text-[11px] font-semibold text-white/[0.3] tracking-[0.8px] uppercase">
                                             Channel Name
                                         </FormLabel>
                                         <FormControl>
                                             <Input
                                                 disabled={isLoading}
-                                                className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                                                placeholder="Enter channel name"
+                                                className="h-11 bg-white/[0.04] border-white/[0.075] rounded-[12px] text-[14px] focus-visible:ring-white/[0.05] transition-all"
+                                                placeholder="e.g. general-chat"
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage className="text-[12px] text-rose-400/80 font-medium" />
                                     </FormItem>
                                 )}
                             />
+
                             <FormField
                                 control={form.control}
                                 name="type"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Channel Type</FormLabel>
+                                        <FormLabel className="text-[11px] font-semibold text-white/[0.3] tracking-[0.8px] uppercase">
+                                            Channel Type
+                                        </FormLabel>
                                         <Select
                                             disabled={isLoading}
                                             onValueChange={field.onChange}
@@ -142,32 +145,36 @@ export const CreateChannelModal = () => {
                                         >
                                             <FormControl>
                                                 <SelectTrigger
-                                                    className="bg-zinc-300/50 border-0 focus:ring-0 text-black 
-                                                    ring-offest-0 focus:ring-offset-0 capitalize outline-none"
+                                                    className="h-11 bg-white/[0.04] border-white/[0.075] rounded-[12px] text-[14px] text-white/[0.85] focus:ring-white/[0.05] capitalize outline-none"
                                                 >
                                                     <SelectValue placeholder="Select a channel type" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent>
+                                            <SelectContent className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/[0.1] rounded-[14px] p-1.5 shadow-2xl">
                                                 {Object.values(ChannelType).map((type) => (
                                                     <SelectItem
                                                         key={type}
                                                         value={type}
-                                                        className="capitalize"
+                                                        className="capitalize rounded-[8px] text-[13.5px] font-medium text-white/[0.65] focus:bg-white/[0.05] focus:text-white/[0.95] transition-colors cursor-pointer"
                                                     >
                                                         {type.toLowerCase()}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        <FormMessage />
+                                        <FormMessage className="text-[12px] text-rose-400/80 font-medium" />
                                     </FormItem>
                                 )}
                             />
                         </div>
-                        <DialogFooter className="bg-gray-100 px-6 py-4">
-                            <Button variant="primary" disabled={isLoading}>
-                                Create
+
+                        <DialogFooter className="px-8 pb-8">
+                            <Button 
+                                disabled={isLoading}
+                                variant="primary"
+                                className="w-full h-11 text-[14px] font-semibold tracking-tight"
+                            >
+                                Create Channel
                             </Button>
                         </DialogFooter>
                     </form>

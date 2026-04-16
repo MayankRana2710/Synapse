@@ -12,7 +12,9 @@ const Avatar = React.forwardRef<
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
-      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
+      // Baked in the ghost border and subtle glass background 
+      // so it always looks premium against the #050505 canvas
+      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/[0.07] bg-white/[0.02]",
       className
     )}
     {...props}
@@ -26,7 +28,8 @@ const AvatarImage = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Image
     ref={ref}
-    className={cn("aspect-square h-full w-full", className)}
+    // Added object-cover to prevent any non-square user uploads from stretching
+    className={cn("aspect-square h-full w-full object-cover", className)}
     {...props}
   />
 ))
@@ -39,7 +42,8 @@ const AvatarFallback = React.forwardRef<
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-muted",
+      // Replaced solid bg-muted with a 4% glass fill and muted 30% text
+      "flex h-full w-full items-center justify-center rounded-full bg-white/[0.04] text-[12px] font-medium tracking-[0.2px] text-white/[0.3]",
       className
     )}
     {...props}

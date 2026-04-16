@@ -33,8 +33,15 @@ export const ChatVideoButton = () => {
 
   return (
     <ActionTooltip side="bottom" label={tooltipLabel}>
-      <button onClick={onClick} className="hover:opacity-75 transition mr-4">
-        <Icon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
+      <button 
+        onClick={onClick} 
+        // Added a subtle frosted background on hover, removed hardcoded margins
+        className="flex items-center justify-center p-1.5 rounded-md hover:bg-white/[0.04] transition-colors"
+      >
+        <Icon 
+            strokeWidth={1.7} 
+            className="h-5 w-5 text-white/[0.65] hover:text-white/[0.95] transition-colors" 
+        />
       </button>
     </ActionTooltip>
   );

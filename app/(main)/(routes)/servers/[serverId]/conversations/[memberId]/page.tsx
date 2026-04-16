@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-
 import { db } from "@/lib/db";
 import { getOrCreateConversation } from "@/lib/conversation";
 import { currentProfile } from "@/lib/current-profile";
@@ -18,15 +17,10 @@ interface MemberIdPageProps {
   }>
 }
 
-const MemberIdPage = async ({
-  params,
-  searchParams, 
-}: MemberIdPageProps) => {
+const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
   const profile = await currentProfile();
 
-  if (!profile) {
-    return redirect("/sign-in");
-  }
+  if (!profile) return redirect("/sign-in");
 
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
@@ -36,14 +30,10 @@ const MemberIdPage = async ({
       serverId: resolvedParams.serverId,
       profileId: profile.id,
     },
-    include: {
-      profile: true,
-    },
+    include: { profile: true },
   });
 
-  if (!currentMember) {
-    return redirect("/");
-  }
+  if (!currentMember) return redirect("/");
 
   const conversation = await getOrCreateConversation(currentMember.id, resolvedParams.memberId);
 
@@ -52,11 +42,11 @@ const MemberIdPage = async ({
   }
 
   const { memberOne, memberTwo } = conversation;
-
   const otherMember = memberOne.profileId === profile.id ? memberTwo : memberOne;
 
   return ( 
-    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+    // Removed solid backgrounds, allowing the dark glass aesthetic to flow
+    <div className="flex flex-col h-full bg-transparent relative z-10 w-full">
       <ChatHeader
         name={otherMember.profile.name}
         serverId={resolvedParams.serverId}
@@ -84,17 +74,13 @@ const MemberIdPage = async ({
             paramKey="conversationId"
             paramValue={conversation.id}
             socketUrl="/api/socket/direct-messages"
-            socketQuery={{
-              conversationId: conversation.id,
-            }}
+            socketQuery={{ conversationId: conversation.id }}
           />
           <ChatInput
             name={otherMember.profile.name}
             type="conversation"
             apiUrl="/api/socket/direct-messages"
-            query={{
-              conversationId: conversation.id,
-            }}
+            query={{ conversationId: conversation.id }}
           />
         </>
       )}
